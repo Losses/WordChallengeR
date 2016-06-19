@@ -36,4 +36,7 @@ vignettes/*.pdf
 tmp/*
 output/*
 data/*.csv
-dictionary/*.json
+dictionary/ec/*.json
+dictionary/ee/*.xml
+playground.R
+.Rproj.user
