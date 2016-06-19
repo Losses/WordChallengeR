@@ -1,3 +1,5 @@
+Sys.setlocale("LC_CTYPE","chinese")
+Sys.setenv(LANG = "en")
 source('./script/function.R', encoding = 'utf8')
 
 command_list <- list(
