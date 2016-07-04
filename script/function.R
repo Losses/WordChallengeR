@@ -78,6 +78,7 @@ html_tag <- function(content, tag){
 #####################################################
 
 read.word <- function(word, type = 'EC'){
+  if(word == '') return(F)
   if(type == 'EC') return(read.word.ec(word))
   read.word.ee(word)
 }
@@ -112,7 +113,9 @@ value_node <- function(node, tag){
 }
 
 get_def <- function(node){
-  xmlValue(xmlChildren(node)$text)
+  text <- xmlChildren(node)$text
+  if (!is.null(text)) return(xmlValue(text))
+  xmlValue(xmlChildren(node)$un)
 }
 
 clear_def <- function(text){
@@ -129,8 +132,11 @@ read.entry_node.ee <- function(node, sentence = F){
   entry$phonetic <- value_node(node, 'pr')
   
   entry$def <- getNodeSet(node, 'def/dt') %>% sapply(get_def) %>%
-    clear_def %>% paste(., collapse = '; ')
+    na.omit %>% clear_def %>% paste(., collapse = '; ')
   #entry$sentence <- xmlValue(def$vi)
+  #getNodeSet(node, 'def/dt/vi') %>% xmlChildren %>% names
+  # 
+  
   
   entry
 }
@@ -157,6 +163,7 @@ read.word.ee <- function(word){
   if (length(entry_list) == 0) {
     path <- '//entry_list/entry'
     entry_list <- getNodeSet(data, path)
+    if (length(entry_list) == 0) return(read.word.ec)
   }
   
   query <- lapply(entry_list, read.entry_node.ee) %>% do.call(rbind, .)
