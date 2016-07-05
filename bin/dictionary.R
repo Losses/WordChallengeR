@@ -1,5 +1,5 @@
-FILE_NAME <- ifelse(is.na(LAST_COMMAND[1]), get_file(), LAST_COMMAND[1])
-PROFILE <- ifelse(is.na(LAST_COMMAND[2]), 'default.csv', LAST_COMMAND[2])
+FILE_NAME <- ifelse(is.na(LAST_COMMAND[2]), get_file(), LAST_COMMAND[2])
+PROFILE <- ifelse(is.na(LAST_COMMAND[3]), 'default.csv', LAST_COMMAND[3])
 SESSION <- as.numeric(Sys.time())
 
 new_dictionary_list <- function(list.file = FILE_NAME){
@@ -173,3 +173,5 @@ write.application <- function(list.file, profile.file = 'default.csv', dir.name 
   generate_application(list.file, profile.file) %>%
     writeLines(o_name('application.html'), useBytes = T)
 }
+
+write.application(FILE_NAME, PROFILE)
