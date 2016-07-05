@@ -1,0 +1,4 @@
+id,name,type,order,style
+orderList,order list,list,order,simple
+shuffleList,shuffle list,list,shuffle,
+dictionary,dictionary,dictionary,order,
