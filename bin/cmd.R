@@ -1,16 +1,17 @@
+rm(list = ls())
+source('bin/lib/function.R', encoding = 'utf8')
+
 Sys.setlocale("LC_CTYPE","chinese")
 Sys.setenv(LANG = "en")
 
 standard_lib <- readLines('etc/standardLib.txt')
 WORD_CACHE <- build_word_cache()
 
-source('./script/function.R', encoding = 'utf8')
-
 command_list <- list(
-  dictionary = './script/dictionary.R',
-  quiz = './script/quiz.R',
-  summary = './script/summary.R',
-  get = './script/get.R'
+  dictionary = 'bin/dictionary.R',
+  quiz = 'bin/quiz.R',
+  summary = 'bin/summary.R',
+  get = 'bin/get.R'
 )
 
 command_line <- function(){
@@ -25,8 +26,6 @@ command_line <- function(){
   }
   command_line()
 }
-
-source('./script/function.R', encoding = 'utf8')
 
 cls()
 cat(' Word Challange System \n=======================\nVersion:1.0\nAuthor:Losses Don\n')
