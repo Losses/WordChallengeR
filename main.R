@@ -1,1 +1,1 @@
-source('./script/cmd.R')
+source('./bin/cmd.R')

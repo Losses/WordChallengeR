@@ -34,9 +34,9 @@ vignettes/*.pdf
 
 # WordChallengeR
 tmp/*
-output/*
-data/*.csv
-dictionary/ec/*.json
-dictionary/ee/*.xml
-playground.R
+usr/output/*
+usr/list/*.csv
+etc/dictionary/ec/*.json
+etc/dictionary/ee/*.xml
+etc/playground.R
 .Rproj.user

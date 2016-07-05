@@ -1,5 +1,3 @@
-source('./script/function.R', encoding = 'utf8')
-
 show_question <- function(word){
   cls()
   cat(word)
@@ -44,7 +42,7 @@ generate_report <- function(){
       wrong = c(wrong, character(max_length - length(wrong)))
     )
     time <- as.numeric(Sys.time())
-    write.csv(x = report, file = sprintf('./output/quiz_%s.csv', time), row.names = F)
+    write.csv(x = report, file = sprintf('usr/output/quiz_%s.csv', time), row.names = F)
     if(file.exists('.quizPaper')) file.rename(from = '.quizPaper', to = sprintf('.paper_%s', time))
     cat(' done\n')
     return(T)

@@ -21,12 +21,12 @@ yn <- function(hint){
 }
 
 get_file_hint <- function(file = readline()){
-  if(file.exists(sprintf('./data/%s', file))) file
+  if(file.exists(sprintf('usr/list/%s', file))) file
   else get_file()
 }
 
 list_data_file <- function(){
-  csv_list <- list.files('./data')
+  csv_list <- list.files('usr/list')
   csv_list <- csv_list[grep('\\s*.csv', csv_list)]
   csv_list[csv_list != 'temp.csv']
 }
@@ -88,7 +88,7 @@ read.word <- function(word, type = 'EC'){
 #-----------------------
 
 read.word.ec <- function(word){
-  file.loc <- sprintf('./dictionary/ec/%s.json', word)
+  file.loc <- sprintf('etc/dictionary/ec/%s.json', word)
   if (!file.exists(file.loc)){
     url <- sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=WordChallengeR&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_API, word)
     download.file(url, destfile = file.loc)
@@ -148,7 +148,7 @@ get_entry_def.ee <- function(x){
 read.word.ee <- function(word){
   if(is.pharse(word)) return(read.word.ec(word))
   
-  file.loc <- sprintf('./dictionary/ee/%s.xml', word)
+  file.loc <- sprintf('etc/dictionary/ee/%s.xml', word)
   if (!file.exists(file.loc)) {
     url <- sprintf('http://www.dictionaryapi.com/api/v1/references/learners/xml/%s?key=%s', word, EE_API)
     download.file(url, destfile = file.loc)
@@ -180,7 +180,7 @@ read.word.ee <- function(word){
 #####################################################
 
 read.list <- function(file.name){
-  words <- read.csv(sprintf('./data/%s', file.name), header = T)
+  words <- read.csv(sprintf('usr/list/%s', file.name), header = T)
   words <- lapply(words, remove_blank)
   words
 }
@@ -256,6 +256,3 @@ build_word_cache <- function(){
   
   word_cache
 }
-
-standard_lib <- readLines('./data/standardLib.txt')
-WORD_CACHE <- build_word_cache()

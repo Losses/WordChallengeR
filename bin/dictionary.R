@@ -34,7 +34,7 @@ words_dictionary <- pasteLines(
           length(words_unique), sum(sapply(words_unique,need_italic)), sum(sapply(words_unique,need_bold)))
 )
 
-words_dictionary <- sprintf(paste(readLines('./template/dictionary.html'),collapse = ''), words_dictionary)
+words_dictionary <- sprintf(paste(readLines('etc/template/dictionary.html'),collapse = ''), words_dictionary)
 
 original_list <- ''
 
@@ -55,19 +55,19 @@ for(.class in names(words)){
   )
 }
 
-original_list <- sprintf(paste(readLines('./template/original.html'),collapse = ''), original_list)
+original_list <- sprintf(paste(readLines('etc/template/original.html'),collapse = ''), original_list)
 
 order_list <- ''
 for(.i in words_order){
   order_list <- pasteLines(order_list, .i, html = T)
 }
 order_list <- pasteLines(order_list, sprintf('%s words in total', length(words_order)), html = T)
-order_list <- sprintf(paste(readLines('./template/original.html'),collapse = ''), order_list)
+order_list <- sprintf(paste(readLines('etc/template/original.html'),collapse = ''), order_list)
 
 o_name <- function(name){
-  dir_name <- sprintf('./output/%s', SESSION)
+  dir_name <- sprintf('usr/output/%s', SESSION)
   if(!dir.exists(dir_name)) dir.create(dir_name)
-  sprintf('./output/%s/%s', SESSION, name)
+  sprintf('usr/output/%s/%s', SESSION, name)
 }
 
 writeLines(order_list, o_name('order.html'), useBytes = T)

@@ -1,5 +1,9 @@
 Sys.setlocale("LC_CTYPE","chinese")
 Sys.setenv(LANG = "en")
+
+standard_lib <- readLines('etc/standardLib.txt')
+WORD_CACHE <- build_word_cache()
+
 source('./script/function.R', encoding = 'utf8')
 
 command_list <- list(
