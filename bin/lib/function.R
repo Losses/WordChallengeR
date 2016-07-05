@@ -43,7 +43,6 @@ get_file <- function(){
 # File Functions
 #####################################################
 
-
 write.file <- function(x, file){
   con <- file(file, "a")
   tryCatch({
@@ -55,7 +54,7 @@ write.file <- function(x, file){
 }
 
 #####################################################
-# Data Formating Functions
+# String Process Functions
 #####################################################
 
 pasteLines <- function(x, y = '', html = F){
@@ -71,6 +70,11 @@ remove_blank <- function(x){
 
 html_tag <- function(content, tag){
   sprintf('<%s>%s</%s>', tag, content, tag)
+}
+
+sub_utf <- function(pattern, replacement, x){
+  split <- strsplit(x, split = pattern)[[1]]
+  c(split[1], replacement, split[2]) %>% paste(collapse = '')
 }
 
 #####################################################
@@ -255,4 +259,12 @@ build_word_cache <- function(){
   word_cache$word <- as.character(word_cache$word)
   
   word_cache
+}
+
+#####################################################
+# Other Dictionary Functions
+#####################################################
+
+read.profile <- function(profile.file){
+  sprintf('usr/profile/%s', profile.file) %>% read.csv
 }
