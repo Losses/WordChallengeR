@@ -83,8 +83,12 @@
             .action_bar{display:none;}
         }
         
-         @media print and (width: 21cm) and (height: 29.7cm) {
+        @media print and (width: 21cm) and (height: 29.7cm) {
              #main .dictionary{-webkit-column-count:2; -moz-column-count:2; column-count:2;}
+        }
+        
+        @media only screen{
+            #main .dictionary, #main .list{font:menu};
         }
         
         @media only screen and (max-width : 1000px){
