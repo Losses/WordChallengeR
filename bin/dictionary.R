@@ -142,13 +142,18 @@ generate_content <- function(x, profile){
   apply(profile, 1, content_warpper, x = x) %>% paste(collapse = '')
 }
 
-generate_list_list_element <- function(profile){
+generate_list_list_element <- function(profile, title_page = F){
   profile <- as.list(profile)
-  sprintf('<li data-to-list="%s">%s</li>', profile$id, profile$name)
+  if (!title_page)
+    sprintf('<li data-to-list="%s">%s</li>', profile$id, profile$name)
+  else
+    sprintf('<li data-to-list="%s"><h1>%s</h1><p>%s %s</p></li>',
+            profile$id, profile$name, profile$order, profile$type)
 }
 
-generate_list_list <- function(profile){
-  apply(profile, 1, generate_list_list_element) %>% paste(collapse = '')
+generate_list_list <- function(profile, title_page = F){
+  apply(profile, 1, generate_list_list_element, title_page = title_page) %>% 
+    paste(collapse = '')
 }
 
 generate_application <- function(list.file, profile.file = 'default.csv'){
@@ -157,10 +162,12 @@ generate_application <- function(list.file, profile.file = 'default.csv'){
   
   dict_content <- generate_content(dict_list, profile)
   list_content <- generate_list_list(profile)
+  title_list_content <- generate_list_list(profile, T)
   
   readLines('etc/template/webApplication.html') %>% paste(collapse = '\n') %>%
-    sub_utf(pattern = '\\{\\{DICT_CONTENT\\}\\}', replacement = dict_content, .) %>%
-    sub_utf(pattern = '\\{\\{LIST_CONTENT\\}\\}', replacement = list_content, .)
+    sub_utf('\\{\\{DICT_CONTENT\\}\\}', dict_content, .) %>%
+    sub_utf('\\{\\{LIST_CONTENT\\}\\}', list_content, .) %>%
+    sub_utf('\\{\\{TITLE_LIST_CONTENT\\}\\}', title_list_content, .)
 }
 
 o_name <- function(x, dir.name = SESSION){
