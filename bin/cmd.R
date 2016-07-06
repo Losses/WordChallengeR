@@ -28,8 +28,12 @@ command_line <- function(){
   command_line()
 }
 
-cls()
-cat('\n Word Challange System \n=======================\nVersion: 1.0\nAuthor: Losses Don\n')
-cat(sprintf('R Version: %s\n', version$version.string))
-cat('Dictionary API Provied By: Youdao Dict, Merriam-Webster\n\n')
-command_line()
+wdR <- function(){
+  cls()
+  cat('\n Word Challange System \n=======================\nVersion: 1.0\nAuthor: Losses Don\n')
+  cat(sprintf('R Version: %s\n', version$version.string))
+  cat('Dictionary API Provied By: Youdao Dict, Merriam-Webster\n\n')
+  command_line()
+}
+
+wdR()
