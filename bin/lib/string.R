@@ -22,3 +22,17 @@ sub_utf <- function(pattern, replacement, x){
   split <- strsplit(x, split = pattern)[[1]]
   c(split[1], replacement, split[2]) %>% paste(collapse = '')
 }
+
+na.omit.safe <- function(x){
+  if (is.null(x)) return(NA)
+  else return(na.omit(x))
+}
+
+is.valid.s <- function(x){
+  !(is.null(x) || is.na(x))
+}
+
+is.valid <- function(x){
+  if (length(x)[1] == 0) return(F)
+  lapply(x, is.valid.s) %>% as.logical
+}

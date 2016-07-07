@@ -2,4 +2,6 @@ id,name,type,order,style,lang
 orderList,order list,list,order,simple,
 originalList,original list,list,original,unit,
 shuffleList,shuffle list,list,shuffle,simple,
-dictionary,dictionary,dictionary,original,,EC
+EC dictionary,EE dictionary,dictionary,original,,EC
+EE dictionary,EC dictionary,dictionary,original,,EE
+sentence,sentence list,sentence,original,,

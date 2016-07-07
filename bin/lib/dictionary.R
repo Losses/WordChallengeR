@@ -10,9 +10,10 @@ read.profile <- function(profile.file){
   sprintf('usr/profile/%s', profile.file) %>% read.csv
 }
 
-read.word <- function(word, type = 'EC'){
+read.word <- function(word, lang = 'EC', generate_sentence = F){
   if(word == '') return(F)
-  if(type == 'EC') return(read.word.ec(word))
+  if(generate_sentence == T) return(read.word.ee(word, generate_sentence = T))
+  if(lang == 'EC') return(read.word.ec(word))
   read.word.ee(word)
 }
 
@@ -58,18 +59,21 @@ clear_def <- function(text){
     gsub(' $', '', ., perl = T)
 }
 
-read.entry_node.ee <- function(node, sentence = F){
+filter_def <- function(text){
+  if(is.valid(text)) text
+  else ''
+}
+
+read.entry_node.ee <- function(node){
   entry <- list()
   entry$fl <- value_node(node, 'fl')
   entry$gram <- value_node(node, 'def/gram')
   entry$phonetic <- value_node(node, 'pr')
   
   entry$def <- getNodeSet(node, 'def/dt') %>% sapply(get_def) %>%
-    na.omit %>% clear_def %>% paste(., collapse = '; ')
-  #entry$sentence <- xmlValue(def$vi)
-  #getNodeSet(node, 'def/dt/vi') %>% xmlChildren %>% names
-  # 
-  
+    na.omit  %>% filter_def %>% clear_def %>% paste(., collapse = '; ')
+  entry$sentence <- getNodeSet(node, 'def/dt/vi') %>%
+    lapply(. ,xmlValue) %>% as.character %>% filter_def
   
   entry
 }
@@ -78,7 +82,11 @@ get_entry_def.ee <- function(x){
   sprintf('%s. %s', x$fl, x$def)
 }
 
-read.word.ee <- function(word){
+get_entry_sentence.ee <- function(x, n = 1){
+  na.omit(x$sentence[1:n])
+}
+
+read.word.ee <- function(word, generate_sentence = F){
   if(is.pharse(word)) return(read.word.ec(word))
   
   file.loc <- sprintf('etc/dictionary/ee/%s.xml', word)
@@ -96,16 +104,28 @@ read.word.ee <- function(word){
   if (length(entry_list) == 0) {
     path <- '//entry_list/entry'
     entry_list <- getNodeSet(data, path)
-    if (length(entry_list) == 0) return(read.word.ec)
+    if (length(entry_list) == 0) return(read.word.ec(word))
   }
   
   query <- lapply(entry_list, read.entry_node.ee) %>% do.call(rbind, .)
+  phonetic <- read.word.ec(word)$phonetic
+  #phonetic <- na.omit.safe(query[,'phonetic']$phonetic)[1]
+  sentence <- apply(query, 1, get_entry_sentence.ee)
   
-  list(
-    word = word,
-    phonetic = na.omit(query[,'phonetic']$phonetic)[1],
-    explains = apply(query, 1, get_entry_def.ee)
-  )
+  if (!generate_sentence) {
+    list(
+      word = word,
+      phonetic = phonetic,
+      explains = apply(query, 1, get_entry_def.ee),
+      sentence = sentence
+    )
+  } else {
+    list(
+      word = word,
+      phonetic = phonetic,
+      explains = sentence
+    )
+  }
 }
 
 #####################################################
@@ -229,16 +249,16 @@ switch_list <- function(x, order){
          x$unique)
 }
 
-generate_dictionary <- function(x, order, html = T){
+generate_dictionary <- function(x, order, lang = 'EC', generate_sentence = F, html = T){
   summary_str <- '%s words in total, %s vocabulary not within the scope of examination, %s key words.'
   words_list <- switch_list(x, order)
   
   words_dictionary <- ''
   
-  for (.i in words_list){
-    entry <- read.word(.i)
+  for (.i in words_list) {
+    entry <- read.word(.i, lang = lang, generate_sentence = generate_sentence)
     
-    if(html){
+    if (html) {
       words_dictionary <- paste(
         words_dictionary,
         as.dictionary(entry, html = T),
@@ -322,8 +342,10 @@ content_warpper <- function(x, profile){
   profile <- as.list(profile)
   if (profile$type == 'list')
     content <- generate_list(x, order = profile$order, style = profile$style)
+  else if (profile$type == 'sentence')
+    content <- generate_dictionary(x, order = profile$order, generate_sentence = T)
   else if (profile$type == 'dictionary')
-    content <- generate_dictionary(x, order = profile$order)
+    content <- generate_dictionary(x, order = profile$order, lang = toupper(profile$lang))
   else content <- ''
   
   sprintf('<div data-list-id="%s" class="%s">%s</div>',
