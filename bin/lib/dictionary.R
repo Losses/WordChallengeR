@@ -394,5 +394,5 @@ write.application <- function(list.file,
                               profile.file = 'default.csv',
                               dir.name = as.numeric(Sys.time())){
   generate_application(list.file, profile.file) %>%
-    writeLines(o_name('application.html'), useBytes = T)
+    writeLines(o_name('application.html', dir.name), useBytes = T)
 }
