@@ -39,4 +39,8 @@ usr/list/*.csv
 etc/dictionary/ec/*.json
 etc/dictionary/ee/*.xml
 etc/playground.R
+
+!tmp/.keep
+!usr/output/.keep
+
 .Rproj.user
