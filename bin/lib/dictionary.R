@@ -13,8 +13,8 @@ read.profile <- function(profile.file){
 read.word <- function(word, lang = 'EC', generate_sentence = F){
   if(word == '') return(F)
   if(generate_sentence == T) return(read.word.ee(word, generate_sentence = T))
-  if(lang == 'EC') return(read.word.ec(word))
-  read.word.ee(word)
+  if(lang == 'EE') return(read.word.ee(word))
+  read.word.ec(word)
 }
 
 #-----------------------
@@ -23,7 +23,7 @@ read.word <- function(word, lang = 'EC', generate_sentence = F){
 
 read.word.ec <- function(word){
   file.loc <- sprintf('etc/dictionary/ec/%s.json', word)
-  if (!file.exists(file.loc)){
+  if (!file.exists(file.loc)) {
     url <- sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=WordChallengeR&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_API, word)
     download.file(url, destfile = file.loc)
   }
@@ -384,13 +384,15 @@ generate_application <- function(list.file, profile.file = 'default.csv'){
     sub_utf('\\{\\{TITLE_LIST_CONTENT\\}\\}', title_list_content, .)
 }
 
-o_name <- function(x, dir.name = SESSION){
+o_name <- function(x, dir.name = as.numeric(Sys.time())){
   dir_name <- sprintf('usr/output/%s', dir.name)
   if (!dir.exists(dir_name)) dir.create(dir_name)
   sprintf('usr/output/%s/%s', dir.name, x)
 }
 
-write.application <- function(list.file, profile.file = 'default.csv', dir.name = SESSION){
+write.application <- function(list.file, 
+                              profile.file = 'default.csv',
+                              dir.name = as.numeric(Sys.time())){
   generate_application(list.file, profile.file) %>%
     writeLines(o_name('application.html'), useBytes = T)
 }
