@@ -1,3 +1,5 @@
 library(XML)
 library(rjson)
+library(crayon)
 library(magrittr)
+library(hunspell)
