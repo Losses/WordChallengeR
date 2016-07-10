@@ -26,9 +26,10 @@ get.remote.try <- function(url){
 
 get.remote <- function(url, location = getwd(),
                        hint = 'Getting file from remote server',
-                       max.retry = 3){
+                       max.retry = 3,
+                       force = T){
   
-  if (hint != '') sprintf('%s... ', hint) %>% cat
+  if (hint != '') sprintf('%s ... ', hint) %>% cat
   try_count <- 1
   status <- T
   repeat {
@@ -42,17 +43,20 @@ get.remote <- function(url, location = getwd(),
     if (file.loc != F) break()
     try_count <- try_count + 1
   }
+  
   if (status) file.rename(file.loc, location)
   
   if (hint != '') 
     ifelse(status, green('[SUCCESS]'), red('[FAIL]')) %>% sprintf('%s\n', .) %>% cat
+
+  if (!status && force) sprintf('ERROR: Cant download %s', url) %>% stop_red(.)
   
   status
 }
 
-parse.remote <- function(url, file.loc, hint, type, remote_bad = T, max.retry  = 3){
+parse.remote <- function(url, file.loc, hint, type, remote_bad = T, max.retry  = 3, force = T){
   if (!file.exists(file.loc)) {
-    download_report <- get.remote(url, file.loc, hint = hint, max.retry)
+    download_report <- get.remote(url, file.loc, hint = hint, max.retry, force = force)
     if (!download_report) return(F)
   }
   
@@ -66,8 +70,10 @@ parse.remote <- function(url, file.loc, hint, type, remote_bad = T, max.retry  =
     stop('Wrong type!')
   }
   
-  if (remote_bad && is.logical(result) && result == F)
+  if (remote_bad && is.logical(result) && result == F) {
+    if (force) stop_red('ERROR: Dictionary source file format error.')
     file.remove(file.loc)
+  }
   
   result
 }

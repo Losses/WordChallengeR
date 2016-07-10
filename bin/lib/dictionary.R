@@ -10,23 +10,23 @@ read.profile <- function(profile.file){
   sprintf('usr/profile/%s', profile.file) %>% read.csv
 }
 
-read.word <- function(word, lang = 'EC', generate_sentence = F){
-  if(word == '') return(F)
-  if(generate_sentence == T) return(read.word.ee(word, generate_sentence = T))
-  if(lang == 'EE') return(read.word.ee(word))
-  read.word.ec(word)
+read.word <- function(word, lang = 'EC', generate_sentence = F, ...){
+  if (word == '') return(NA)
+  if (generate_sentence == T) return(read.word.ee(word, generate_sentence = T, ...))
+  if (lang == 'EE') return(read.word.ee(word, ...))
+  read.word.ec(word, ...)
 }
 
 #-----------------------
 # EC Dictionary
 #-----------------------
 
-read.word.ec <- function(word){
+read.word.ec <- function(word, ...){
   entry <- parse.remote(
             url = sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=WordChallengeR&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_API, word),
             file.loc = sprintf('etc/dictionary/ec/%s.json', word),
             hint = sprintf('Getting "%s" from remote... ', word),
-            type = 'JSON'
+            type = 'JSON', ...
           )
   
   if (is.logical(entry) && entry == F) return(F)
@@ -88,14 +88,14 @@ get_entry_sentence.ee <- function(x, n = 1){
   na.omit(x$sentence[1:n])
 }
 
-read.word.ee <- function(word, generate_sentence = F){
+read.word.ee <- function(word, generate_sentence = F, ...){
   if(is.pharse(word)) return(read.word.ec(word))
   
   data <- parse.remote(
     url = sprintf('http://www.dictionaryapi.com/api/v1/references/learners/xml/%s?key=%s', word, EE_API),
     file.loc = sprintf('etc/dictionary/ee/%s.xml', word),
     hint = sprintf('Getting "%s" from remote... ', word),
-    type = 'XML'
+    type = 'XML', ...
   )
   
   if (is.logical(data) && data == F) return(F)
@@ -144,14 +144,22 @@ read.list <- function(file.name){
 
 flatten_list <- function(list){
   words_character <- c()
-  for(.i in names(list))
+  for (.i in names(list))
     words_character <- c(words_character, list[[.i]])
   words_character <- words_character[words_character != '']
   
   words_character
 }
 
-as.dictionary <- function(entry, lib_mark = T, html = F){
+as.dictionary <- function(entry, lib_mark = T, html = F, force = T){
+  if (is.logical(entry) && entry == F) {
+    if (force) stop_red('ERROR: Var entry is invalid!')
+    else {
+      if (html) return('<p style="color:red">\\(X_X)/<br></p>')
+      else return('\\(X_X)/')
+    }
+  }
+  
   words_dictionary <- ''
   words_dictionary <- pasteLines(
     words_dictionary,
@@ -203,7 +211,17 @@ need_italic <- function(word){
 build_word_cache <- function(){
   word_cache <- list()
   all_words <- c()
-  for(.file in list_data_file())
+  data_files <- list_data_file()
+  
+  if (length(data_files) == 0) {
+    return(
+      data.frame(
+        word = NA, freq = NA, in_lib = NA
+      )[-1, ]
+    )
+  }
+  
+  for (.file in data_files)
     all_words <- c(all_words, read.list(.file))
   
   word_cache <- as.data.frame(table(flatten_list(all_words)))
@@ -253,27 +271,26 @@ switch_list <- function(x, order){
          x$unique)
 }
 
-generate_dictionary <- function(x, order, lang = 'EC', generate_sentence = F, html = T){
+generate_dictionary <- function(x, order, lang = 'EC',
+                                generate_sentence = F, html = T, ...){
   summary_str <- '%s words in total, %s vocabulary not within the scope of examination, %s key words.'
   words_list <- switch_list(x, order)
   
   words_dictionary <- ''
   
   for (.i in words_list) {
-    entry <- read.word(.i, lang = lang, generate_sentence = generate_sentence)
-    
-    if (is.logical(entry) && entry == F) return (F)
+    entry <- read.word(.i, lang = lang, generate_sentence = generate_sentence, ...)
     
     if (html) {
       words_dictionary <- paste(
         words_dictionary,
-        as.dictionary(entry, html = T),
+        as.dictionary(entry, html = T, ...),
         collapse = ''
       )
     } else {
       words_dictionary <- pasteLines(
         words_dictionary,
-        as.dictionary(entry, html = T)
+        as.dictionary(entry, html = F, ...)
       )
     }
   }
@@ -344,28 +361,22 @@ generate_list <- function(x, order, style, html = T){
     return(generate_simple_list(x, order, html))
 }
 
-content_warpper <- function(x, profile){
+content_warpper <- function(x, profile, ...){
   profile <- as.list(profile)
   if (profile$type == 'list')
     content <- generate_list(x, order = profile$order, style = profile$style)
   else if (profile$type == 'sentence')
-    content <- generate_dictionary(x, order = profile$order, generate_sentence = T)
+    content <- generate_dictionary(x, order = profile$order, generate_sentence = T, ...)
   else if (profile$type == 'dictionary')
-    content <- generate_dictionary(x, order = profile$order, lang = toupper(profile$lang))
+    content <- generate_dictionary(x, order = profile$order, lang = toupper(profile$lang), ...)
   else content <- ''
-  
-  if (is.logical(content) && content == F) {
-    sprintf('ERROR: Cant fetch file from remote server while generating "%s"!', profile$name) %>%
-      red %>% cat
-    content <- '<b>Network error, cant generate content!</b>'
-  }
   
   sprintf('<div data-list-id="%s" class="%s">%s</div>',
           profile$id, profile$type, content)
 }
 
-generate_content <- function(x, profile){
-  apply(profile, 1, content_warpper, x = x) %>% paste(collapse = '')
+generate_content <- function(x, profile, ...){
+  apply(profile, 1, content_warpper, x = x, ...) %>% paste(collapse = '')
 }
 
 generate_list_list_element <- function(profile, title_page = F){
@@ -382,11 +393,17 @@ generate_list_list <- function(profile, title_page = F){
     paste(collapse = '')
 }
 
-generate_application <- function(list.file, profile.file = 'default.csv'){
+generate_application <- function(list.file, profile.file = 'default.csv', ...){
   profile <- read.profile(profile.file)
   dict_list <- new_dictionary_list(list.file = list.file)
   
-  dict_content <- generate_content(dict_list, profile)
+  dict_content <- tryCatch(generate_content(dict_list, profile, ...),
+                           error = function(e) list(error = T, msg = e))
+  if (is.list(dict_content) && is.logical(dict_content$error) && dict_content$error) {
+    dict_content$msg %>% sprintf('%s\n', .) %>% red %>% cat
+    return()
+  }
+  
   list_content <- generate_list_list(profile)
   title_list_content <- generate_list_list(profile, T)
   
@@ -404,7 +421,7 @@ o_name <- function(x, dir.name = as.numeric(Sys.time())){
 
 write.application <- function(list.file, 
                               profile.file = 'default.csv',
-                              dir.name = as.numeric(Sys.time())){
-  generate_application(list.file, profile.file) %>%
+                              dir.name = as.numeric(Sys.time()), ...){
+  generate_application(list.file, profile.file, ...) %>%
     writeLines(o_name('application.html', dir.name), useBytes = T)
 }
