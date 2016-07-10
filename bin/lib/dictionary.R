@@ -22,13 +22,15 @@ read.word <- function(word, lang = 'EC', generate_sentence = F){
 #-----------------------
 
 read.word.ec <- function(word){
-  file.loc <- sprintf('etc/dictionary/ec/%s.json', word)
-  if (!file.exists(file.loc)) {
-    url <- sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=WordChallengeR&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_API, word)
-    download.file(url, destfile = file.loc)
-  }
+  entry <- parse.remote(
+            url = sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=WordChallengeR&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_API, word),
+            file.loc = sprintf('etc/dictionary/ec/%s.json', word),
+            hint = sprintf('Getting "%s" from remote... ', word),
+            type = 'JSON'
+          )
   
-  entry <- fromJSON(file = file.loc)
+  if (is.logical(entry) && entry == F) return(F)
+  
   list(
     word = word,
     phonetic = entry$basic$`us-phonetic`,
@@ -89,13 +91,15 @@ get_entry_sentence.ee <- function(x, n = 1){
 read.word.ee <- function(word, generate_sentence = F){
   if(is.pharse(word)) return(read.word.ec(word))
   
-  file.loc <- sprintf('etc/dictionary/ee/%s.xml', word)
-  if (!file.exists(file.loc)) {
-    url <- sprintf('http://www.dictionaryapi.com/api/v1/references/learners/xml/%s?key=%s', word, EE_API)
-    download.file(url, destfile = file.loc)
-  }
+  data <- parse.remote(
+    url = sprintf('http://www.dictionaryapi.com/api/v1/references/learners/xml/%s?key=%s', word, EE_API),
+    file.loc = sprintf('etc/dictionary/ee/%s.xml', word),
+    hint = sprintf('Getting "%s" from remote... ', word),
+    type = 'XML'
+  )
   
-  data <- xmlParse(file.loc)
+  if (is.logical(data) && data == F) return(F)
+  
   if (getNodeSet(data, '//entry_list/suggestion') %>% length) return(read.word.ec(word))
   
   path <- sprintf('//entry_list/entry[contains(@id, "[") or @id="%s"]', word)
@@ -258,6 +262,8 @@ generate_dictionary <- function(x, order, lang = 'EC', generate_sentence = F, ht
   for (.i in words_list) {
     entry <- read.word(.i, lang = lang, generate_sentence = generate_sentence)
     
+    if (is.logical(entry) && entry == F) return (F)
+    
     if (html) {
       words_dictionary <- paste(
         words_dictionary,
@@ -347,6 +353,12 @@ content_warpper <- function(x, profile){
   else if (profile$type == 'dictionary')
     content <- generate_dictionary(x, order = profile$order, lang = toupper(profile$lang))
   else content <- ''
+  
+  if (is.logical(content) && content == F) {
+    sprintf('ERROR: Cant fetch file from remote server while generating "%s"!', profile$name) %>%
+      red %>% cat
+    content <- '<b>Network error, cant generate content!</b>'
+  }
   
   sprintf('<div data-list-id="%s" class="%s">%s</div>',
           profile$id, profile$type, content)

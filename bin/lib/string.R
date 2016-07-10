@@ -36,3 +36,10 @@ is.valid <- function(x){
   if (length(x)[1] == 0) return(F)
   lapply(x, is.valid.s) %>% as.logical
 }
+
+rand_string <- function(length = 10,
+                        set = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                        ){
+  set_sep <- strsplit(set, split = '')[[1]]
+  sample(set_sep, size = length) %>% as.character %>% paste(collapse = '')
+}
