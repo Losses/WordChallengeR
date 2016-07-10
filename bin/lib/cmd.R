@@ -2,7 +2,7 @@ if_command <- function(n, default){
   ifelse(is.na(LAST_COMMAND[n]), default, LAST_COMMAND[n])
 }
 
-command_line <- function(command_list){
+command_line <- function(){
   command_list <- list(
     dictionary = 'bin/dictionary.R',
     quiz = 'bin/quiz.R',
@@ -14,7 +14,9 @@ command_line <- function(command_list){
   command <- readline('$WC > ' %>% bold %>% green)
   LAST_COMMAND <<- strsplit(command, ' ')[[1]]
   program <- strsplit(command, ' ')[[1]][1]
-  if (command == 'debug') return(F)
+  if (command == 'debug') 
+    rep('\b', 100) %>% paste(collapse = '') %>%
+    sprintf('%s Entering debug mode...\n', .) %>% stop()
   if (command == 'q') q()
   if (!program %in% names(command_list)) {
     cat('Command not found!\n')
@@ -31,5 +33,5 @@ wcR <- function(){
   cat('EC Dictionary API: Youdao Dict\nEE Dictionary API: Merriam-Webster\n\n')
   cat('This program is free software: you can redistribute it and/or modify it under the terms of the LGPLv3.\n\n')
   
-  command_line(command_list)
+  command_line()
 }
