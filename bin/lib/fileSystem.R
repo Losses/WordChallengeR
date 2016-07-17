@@ -69,7 +69,7 @@ parse.remote <- function(url, file.loc, hint, type, remote_bad = T, max.retry  =
     result <- tryCatch(fromJSON(file = file.loc),
                        error = function(e) F)
   } else if (type == 'XML') {
-    result <- tryCatch(xmlParse(file.loc),
+    result <- tryCatch(xmlParse(file.loc, error = function(e) F),
                        error = function(e) F)
   } else {
     stop('Wrong type!')
