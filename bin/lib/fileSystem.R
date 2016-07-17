@@ -65,6 +65,8 @@ parse.remote <- function(url, file.loc, hint, type, remote_bad = T, max.retry  =
     if (!download_report) return(F)
   }
   
+  result <- F
+  
   if (type == 'JSON') {
     result <- tryCatch(fromJSON(file = file.loc),
                        error = function(e) F)
