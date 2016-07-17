@@ -102,7 +102,7 @@ read.word.ee <- function(word, generate_sentence = F, ...){
   data <- parse.remote(
     url = sprintf('http://www.dictionaryapi.com/api/v1/references/learners/xml/%s?key=%s', word, EE_API),
     file.loc = sprintf('etc/dictionary/ee/%s.xml', word),
-    hint = sprintf('Getting "%s" from remote... ', word),
+    hint = sprintf('Getting EE "%s"', word),
     type = 'XML', ...
   )
   
@@ -162,9 +162,9 @@ flatten_list <- function(list){
   words_character
 }
 
-as.dictionary <- function(entry, lib_mark = T, html = F, force = T){
+as.dictionary <- function(entry, lib_mark = T, html = F, force = F){
   if (is.logical(entry) && entry == F) {
-    if (force) stop_red('ERROR: Var entry is invalid!')
+    if (!force) stop('Var entry is invalid!')
     else {
       if (html) return('<p style="color:red">\\(X_X)/<br></p>')
       else return('\\(X_X)/')

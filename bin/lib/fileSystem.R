@@ -54,7 +54,7 @@ get.remote <- function(url, location = getwd(),
   if (hint != '') 
     ifelse(status, green('[SUCCESS]'), red('[FAIL]')) %>% sprintf('%s\n', .) %>% cat
 
-  if (!status && force) sprintf('ERROR: Cant download %s', url) %>% stop_red(.)
+  if (!status) sprintf('Cant download %s', url) %>% exception(force)
   
   status
 }
@@ -72,12 +72,12 @@ parse.remote <- function(url, file.loc, hint, type, remote_bad = T, max.retry  =
     result <- tryCatch(xmlParse(file.loc, error = function(e) F),
                        error = function(e) F)
   } else {
-    stop('Wrong type!')
+    stop('Wrong dictionary file type!')
   }
   
   if (remote_bad && is.logical(result) && result == F) {
-    if (force) stop_red('ERROR: Dictionary source file format error.')
     file.remove(file.loc)
+    exception('Dictionary source file format error.', force)
   }
   
   result
