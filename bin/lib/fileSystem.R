@@ -13,6 +13,11 @@ write.file <- function(x, file){
   })
 }
 
+remove.files <- function(x){
+  if (is.character(x) && length(x) > 0)
+    for (.i in x) file.remove(x)
+}
+
 get.remote.try <- function(url){
   temp_location <- sprintf('%s/%s', tempdir(), rand_string())
   status <- tryCatch(download.file(url = url, destfile = temp_location, quiet = T),
