@@ -6,7 +6,7 @@
 write.file <- function(x, file){
   con <- file(file, "a")
   tryCatch({
-    cat(iconv(x, to = "UTF-8"), file=con, sep="\n")
+    cat(iconv(x, to = "UTF-8"), file = con, sep = "\n")
   },
   finally = {
     close(con)

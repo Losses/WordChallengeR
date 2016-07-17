@@ -15,7 +15,7 @@ yn <- function(hint){
 }
 
 get_file_hint <- function(file = readline()){
-  if(file.exists(sprintf('usr/list/%s', file))) file
+  if (file.exists(sprintf('usr/list/%s', file))) file
   else get_file()
 }
 
