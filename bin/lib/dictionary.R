@@ -89,6 +89,13 @@ get_entry_sentence.ee <- function(x, n = 1){
   na.omit(x$sentence[1:n])
 }
 
+invalid.ec <- function(word){
+  DICTIONARY_NEED_DELETE <- c(DICTIONARY_NEED_DELETE,
+                              'etc/dictionary/ec/%s.xml' %>% sprintf(word)
+  )
+  read.word.ec(word)
+}
+
 read.word.ee <- function(word, generate_sentence = F, ...){
   if(is.pharse(word)) return(read.word.ec(word))
   
