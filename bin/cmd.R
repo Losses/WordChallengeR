@@ -12,9 +12,9 @@ init <- function(){
   WORD_CACHE <<- build_word_cache()
 }
 
-reset <- function(){
+reset_env <- function(){
   init()
   wcR()
 }
 
-reset()
+reset_env()
