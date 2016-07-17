@@ -44,3 +44,36 @@ rand_string <- function(length = 10,
   set_sep <- strsplit(set, split = '')[[1]]
   sample(set_sep, size = length) %>% as.character %>% paste(collapse = '')
 }
+
+check1Char <- function(x){
+  if (!is.character(x)) stop('x must be a character')
+  if (length(x) > 1) stop('the length of x must equal to 1')
+}
+
+strlength <- function(x){
+  check1Char(x)
+  str <- x %>% strsplit(x = .,split = '')
+  length(str[[1]])
+}
+
+strsplit_by_len <- function(x, len = 46){
+  check1Char(x)
+  xlen <- strlength(x)
+  split_point <- seq.int(1, xlen, len)
+  
+  if (split_point[length(split_point)] != xlen + 1)
+    split_point <- c(split_point, xlen + 1)
+  
+  str <- (x %>% strsplit(x = .,split = ''))[[1]]
+  .i <- 1
+  result <- character(0)
+  while (.i <= length(split_point) - 1) {
+    l <- str[split_point[.i]:split_point[.i + 1] - 1]
+    if (.i > 1) l <- l[-1]
+    l <- paste(l, collapse = '')
+    result <- c(result, l)
+    .i <- .i + 1
+  }
+  
+  result
+}

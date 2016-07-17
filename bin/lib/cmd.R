@@ -22,10 +22,10 @@ command_line <- function(){
   LAST_COMMAND <<- strsplit(command, ' ')[[1]]
   if (!program %in% names(command_list)) {
     cat('Command not found!\n')
+    command_line()
   } else {
-    source(command_list[[program]], encoding = 'utf8')
+    run.script(command_list[[program]], then = command_line, ignore.warning = T)
   }
-  command_line()
   
   remove.files(DICTIONARY_NEED_DELETE)
   DICTIONARY_NEED_DELETE <- character(0)

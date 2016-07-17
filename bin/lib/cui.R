@@ -32,8 +32,3 @@ get_file <- function(){
   cat('\n')
   get_file_hint()
 }
-
-stop_red <- function(e){
-  sprintf('%s\n', e) %>% red %>% cat
-  command_line()
-}
