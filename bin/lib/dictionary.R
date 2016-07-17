@@ -111,7 +111,7 @@ read.word.ee <- function(word, generate_sentence = F, ...){
     return(F)
   }
   
-  if (getNodeSet(data, '//entry_list/suggestion') %>% length) return(read.word.ec(word))
+  if (getNodeSet(data, '//entry_list/suggestion') %>% length) return(invalid.ec(word))
   
   path <- sprintf('//entry_list/entry[contains(@id, "[") or @id="%s"]', word)
   entry_list <- getNodeSet(data, path)
@@ -119,7 +119,7 @@ read.word.ee <- function(word, generate_sentence = F, ...){
   if (length(entry_list) == 0) {
     path <- '//entry_list/entry'
     entry_list <- getNodeSet(data, path)
-    if (length(entry_list) == 0) return(read.word.ec(word))
+    if (length(entry_list) == 0) return(invalid.ec(word))
   }
   
   query <- lapply(entry_list, read.entry_node.ee) %>% do.call(rbind, .)
