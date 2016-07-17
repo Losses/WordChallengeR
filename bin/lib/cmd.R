@@ -26,6 +26,9 @@ command_line <- function(){
     source(command_list[[program]], encoding = 'utf8')
   }
   command_line()
+  
+  remove.files(DICTIONARY_NEED_DELETE)
+  DICTIONARY_NEED_DELETE <- character(0)
 }
 
 wcR <- function(){

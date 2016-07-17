@@ -5,6 +5,7 @@
 
 EC_API <- '1512553241'
 EE_API <- '84ca89b8-2ca9-4851-9ede-d93d7b866f39'
+DICTIONARY_NEED_DELETE <- character(0)
 
 read.profile <- function(profile.file){
   sprintf('usr/profile/%s', profile.file) %>% read.csv
@@ -25,7 +26,7 @@ read.word.ec <- function(word, ...){
   entry <- parse.remote(
             url = sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=WordChallengeR&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_API, word),
             file.loc = sprintf('etc/dictionary/ec/%s.json', word),
-            hint = sprintf('Getting "%s" from remote... ', word),
+            hint = sprintf('Getting EC "%s"', word),
             type = 'JSON', ...
           )
   
@@ -98,7 +99,10 @@ read.word.ee <- function(word, generate_sentence = F, ...){
     type = 'XML', ...
   )
   
-  if (is.logical(data) && data == F) return(F)
+  if (is.logical(data) && data == F) {
+    invalid.ec(word)
+    return(F)
+  }
   
   if (getNodeSet(data, '//entry_list/suggestion') %>% length) return(read.word.ec(word))
   
