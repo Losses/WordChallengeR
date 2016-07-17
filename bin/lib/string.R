@@ -33,7 +33,8 @@ is.valid.s <- function(x){
 }
 
 is.valid <- function(x){
-  if (length(x)[1] == 0) return(F)
+  x <- x[1]
+  if (length(x) == 0) return(F)
   lapply(x, is.valid.s) %>% as.logical
 }
 
