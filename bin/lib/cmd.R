@@ -12,12 +12,14 @@ command_line <- function(){
   )
   
   command <- readline('$WC > ' %>% bold %>% green)
-  LAST_COMMAND <<- strsplit(command, ' ')[[1]]
   program <- strsplit(command, ' ')[[1]][1]
   if (command == 'debug') 
     rep('\b', 100) %>% paste(collapse = '') %>%
     sprintf('%s Entering debug mode...\n', .) %>% stop()
+  if (command == 'reset') reset_env()
   if (command == 'q') q()
+  
+  LAST_COMMAND <<- strsplit(command, ' ')[[1]]
   if (!program %in% names(command_list)) {
     cat('Command not found!\n')
   } else {
