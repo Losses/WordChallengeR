@@ -1,4 +1,5 @@
 library(XML)
+library(stats)
 library(rjson)
 library(crayon)
 library(magrittr)
