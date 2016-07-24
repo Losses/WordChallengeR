@@ -32,3 +32,28 @@ get_file <- function(){
   cat('\n')
   get_file_hint()
 }
+
+new_status <- function(x){
+  x_len <- strlength(x)
+  terminal_width <- options('width')$width
+  dots_count <- terminal_width - 2 - x_len - 14
+  c(x,' ', rep('.', dots_count), ' ', '[ ', yellow('PROCESSING', ']')) %>%
+    paste(., collapse = '') %>% cat
+}
+
+status.change <- function(){
+  rep('\b', 14) %>%
+    paste(., collapse = '') %>% cat
+}
+
+status.done <- function(){
+  status.change()
+  c('[    ', green('DONE', '   ]\n')) %>%
+    paste(., collapse = '') %>% cat
+}
+
+status.fail <- function(){
+  status.change()
+  c('[   ', red('FAILED'), '   ]\n') %>%
+    paste(., collapse = '') %>% cat
+}

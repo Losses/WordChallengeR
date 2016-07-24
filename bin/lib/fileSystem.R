@@ -34,7 +34,7 @@ get.remote <- function(url, location = getwd(),
                        max.retry = 3,
                        force = T){
   
-  if (hint != '') sprintf('%s ... ', hint) %>% cat
+  if (hint != '') new_status(hint)
   try_count <- 1
   status <- T
   repeat {
@@ -51,8 +51,8 @@ get.remote <- function(url, location = getwd(),
   
   if (status) file.rename(file.loc, location)
   
-  if (hint != '') 
-    ifelse(status, green('[SUCCESS]'), red('[FAIL]')) %>% sprintf('%s\n', .) %>% cat
+  if (hint != '')
+    if (status) status.done() else status.fail()
 
   if (!status) sprintf('Cant download %s', url) %>% exception(force)
   
