@@ -42,7 +42,7 @@
     <style>
         *{margin: 0; padding: 0; outline:none;}
         ul{list-style: none;}
-        .ui{font:menu; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; cursor: default;}
+        .ui{font:menu; font-size:12px; line-height:1.3em; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; cursor: default;}
         .start .action_bar{bottom:0;}
         .start #title{opacity:0; visibility: hidden;}
         #title{top:0; width:0; height:100%; width:100%; background:#297ecc; position:fixed;display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; opacity:1; transition:opacity, visibility 300ms;}
@@ -75,7 +75,7 @@
         
         @media print {
             @page{margin: 0;}
-            body {margin: 1cm;}
+            body {margin: 0 0.3cm;}
             #main {margin: 0; font-size:12px;}
             #main h2{font-size:14px;}
             .action_bar{display:none;}
