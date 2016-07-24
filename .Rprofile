@@ -1,1 +1,1 @@
-source('./bin/cmd.R')
+.First <- function() source('./bin/cmd.R')
