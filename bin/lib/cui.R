@@ -4,7 +4,14 @@
 #--------------------------------------------------------
 
 cls <- function(){
-  cat('\014')
+  if (getIdentification() == 'R Console')
+    cat('\014')                       # R Console
+  else{
+    if (Sys.info()[['sysname']] == 'windows')
+      system('powershell clear-host') # Windows
+    else
+      system('clear')                 # *Unix
+  }
 }
 
 yn <- function(hint){
