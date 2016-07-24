@@ -7,7 +7,7 @@ cls <- function(){
   if (getIdentification() == 'R Console')
     cat('\014')                       # R Console
   else{
-    if (Sys.info()[['sysname']] == 'windows')
+    if (Sys.info()[['sysname']] == 'Windows')
       system('powershell clear-host') # Windows
     else
       system('clear')                 # *Unix
