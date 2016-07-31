@@ -493,9 +493,10 @@ o_name <- function(x, dir.name = as.numeric(Sys.time())){
 
 write.application <- function(list.file, 
                               profile.file = 'default.csv',
-                              dir.name = as.numeric(Sys.time()),auto.browse = T, ...){
+                              dir.name = as.numeric(Sys.time()),
+                              auto.browse = T, ...){
   generate_application(list.file, profile.file, ...) %>%
     writeLines(o_name('application.html', dir.name), useBytes = T)
   
-  if(auto.browse) sprintf('%s/application.html', dir.name) %>% browseURL
+  if(auto.browse) sprintf('file:///%s/usr/output/%s/application.html', getwd(), dir.name) %>% browseURL
 }
