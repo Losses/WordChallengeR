@@ -430,6 +430,7 @@ generate_list <- function(x, order, style, html = T){
 
 content_warpper <- function(x, profile, ...){
   profile <- as.list(profile)
+  sprintf('Generate %s: %s', profile$type, profile$name) %>% new_status
   if (profile$type == 'list')
     content <- generate_list(x, order = profile$order, style = profile$style)
   else if (profile$type == 'sentence')
@@ -439,6 +440,8 @@ content_warpper <- function(x, profile, ...){
   else if (profile$type == 'test')
     content <- generate_test(x, order = profile$order, lang = toupper(profile$lang), ...)
   else content <- ''
+  
+  status.done()
   
   sprintf('<div data-list-id="%s" class="%s">%s</div>',
           profile$id, profile$type, content)
@@ -490,7 +493,9 @@ o_name <- function(x, dir.name = as.numeric(Sys.time())){
 
 write.application <- function(list.file, 
                               profile.file = 'default.csv',
-                              dir.name = as.numeric(Sys.time()), ...){
+                              dir.name = as.numeric(Sys.time()),auto.browse = T, ...){
   generate_application(list.file, profile.file, ...) %>%
     writeLines(o_name('application.html', dir.name), useBytes = T)
+  
+  if(auto.browse) sprintf('%s/application.html', dir.name) %>% browseURL
 }

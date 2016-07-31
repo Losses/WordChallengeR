@@ -3,31 +3,9 @@
 #  By Losses Don @ 2016-07-17
 #--------------------------------------------------------
 
-cat_exception <- function(x, len = 48){
-  if (x == '') x <- ' '
-  x <- strsplit_by_len(x)
-  
-  for (.i in x) {
-    llen <- strlength(.i)
-    lblen <- 48 - llen - 2
-    lb <- ifelse(lblen <= 0,
-                 '',
-                 rep(' ', lblen) %>% paste(collapse = ''))
-    '| %s%s |\n' %>% sprintf(., .i, lb) %>% cat
-  }
-}
-
 read.exception <- function(e, type, fn = NULL){
   if (is.null(fn)) {
-    '+------------------------------------------------+\n' %>% cat
-    cat_exception(type)
-    '|------------------------------------------------|\n' %>% cat
-    cat_exception('MESSAGE: ')
-    cat_exception(e$message)
-    cat_exception('')
-    cat_exception('CALL: ')
-    cat_exception(deparse(e$call))
-    '+------------------------------------------------+\n' %>% cat
+    new_card(type, c('MESSAGE: ', e$message, '', 'CALL: ', deparse(e$call)))
   }
   else fn(e)
 }

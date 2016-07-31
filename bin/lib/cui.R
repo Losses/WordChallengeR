@@ -64,3 +64,28 @@ status.fail <- function(){
   c('[   ', red('FAILED'), '   ]\n') %>%
     paste(., collapse = '') %>% cat
 }
+
+cat_card_line <- function(x, len = 48){
+  if (x == '') x <- ' '
+  x <- strsplit_by_len(x)
+  
+  for (.i in x) {
+    llen <- strlength(.i)
+    lblen <- len - llen - 2
+    lb <- ifelse(lblen <= 0,
+                 '',
+                 rep(' ', lblen) %>% paste(collapse = ''))
+    '| %s%s |\n' %>% sprintf(., .i, lb) %>% cat
+  }
+}
+
+new_card <- function(title, content, len = 50){
+  long_line <- rep('-', len - 2) %>% paste(., collapse = '')
+  side_frame <- sprintf('+%s+\n', long_line)
+  sep_line <- sprintf('|%s|\n', long_line)
+  cat(side_frame)
+  cat_card_line(title, len - 2)
+  cat(sep_line)
+  for(.i in content) cat_card_line(.i, len - 2)
+  cat(side_frame)
+}
