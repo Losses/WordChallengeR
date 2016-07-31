@@ -10,7 +10,8 @@ command_line <- function(){
     quiz = 'bin/quiz.R',
     summary = 'bin/summary.R',
     get = 'bin/get.R',
-    new = 'bin/new.R'
+    new = 'bin/new.R',
+    clear = 'bin/clear.R'
   )
   
   command <- readline('$WC > ' %>% bold %>% green)

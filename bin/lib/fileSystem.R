@@ -65,6 +65,12 @@ get.remote <- function(url, location = getwd(),
   status
 }
 
+clear_output <- function(){
+  new_status('Clearning usr/output')
+  list.dirs('usr/output')[-1] %>% lapply(unlink, recursive=TRUE)
+  status.done()
+}
+
 parse.remote <- function(url, file.loc, hint, type, remote_bad = T, max.retry  = 3, force = T){
   if (!file.exists(file.loc)) {
     download_report <- get.remote(url, file.loc, hint = hint, max.retry, force = force)
