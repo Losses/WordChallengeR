@@ -244,20 +244,66 @@ build_word_cache <- function(){
 }
 
 #####################################################
-# Web Application Generating Functions
+# Test Paper Functions
 #####################################################
 
-new_dictionary_list <- function(list.file = FILE_NAME){
-  words <- read.list(list.file)
-  unique <- unique(flatten_list(words))
+entry_to_df <- function(entry){
+  if(is.null(entry$explains)){
+    result <- data.frame(
+      word = entry$word,
+      explain = entry$word
+    )
+  } else {
+    result <- data.frame(
+      word = entry$word,
+      explain = entry$explains
+    )
+  }
   
-  list(
-    words = words,
-    unique = unique,
-    order = sort(unique),
-    shuffle = sample(unique)
-  )
+  result
 }
+
+generate_test_unit <- function(x, html = T){
+  if(html){
+    pattern <- '<li class="test_question"><label class="question">%s</label><input pattern="%s" title="Wrong answer" /></li>'
+    result <- sprintf(pattern, x[['explain']], x[['word']])
+  } else {
+    result <- sprintf('%s __________', x[['explain']])
+  }
+  
+  result
+}
+
+generate_test <- function(x, lang = 'EC', order = 'shuffle', html = T, ...){
+  df <- data.frame(
+    word = character(0),
+    explain = character(0)
+  )
+  
+  for(.i in x$unique) {
+    .df <- read.word(.i, lang = lang) %>% entry_to_df
+    df <- rbind(df, .df)
+  }
+  
+  if(order == 'shuffle') df <- df[nrow(df) %>% sample,]
+  
+  question_str <- apply(df, 1, generate_test_unit, html = html) %>% 
+    paste(collapse = '\n') %>% sprintf('<ol class="test_body">%s</ol>', .)
+  
+  if(html){
+    answer_str <- df[['word']] %>% sprintf('<li>%s</li>', .) %>%
+      paste(collapse = '\n') %>% sprintf('<ol class="answer">%s</ol>', .)
+  } else {
+    answer_str <- df[['word']] %>% paste(collapse = '\n') %>%
+      sprintf(' Answer\n========\n', .)
+  }
+  
+  paste(question_str, answer_str, sep = '\n')
+}
+
+#####################################################
+# Web Application Generating Functions
+#####################################################
 
 fill_template <- function(x, template){
   sprintf(paste(readLines(template),collapse = ''), x)
@@ -380,6 +426,8 @@ content_warpper <- function(x, profile, ...){
     content <- generate_dictionary(x, order = profile$order, generate_sentence = T, ...)
   else if (profile$type == 'dictionary')
     content <- generate_dictionary(x, order = profile$order, lang = toupper(profile$lang), ...)
+  else if (profile$type == 'test')
+    content <- generate_test(x, order = profile$order, lang = toupper(profile$lang), ...)
   else content <- ''
   
   sprintf('<div data-list-id="%s" class="%s">%s</div>',

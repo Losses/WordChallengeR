@@ -1,0 +1,6 @@
+id,name,type,order,style,lang
+orderList,order list,list,order,simple,
+originalList,original list,list,original,unit,
+shuffleList,shuffle list,list,shuffle,simple,
+dictionary,dictionary,dictionary,original,,EC
+test,test,test,shuffle,,EC
