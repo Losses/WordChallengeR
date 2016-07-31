@@ -24,18 +24,18 @@ read.word <- function(word, lang = 'EC', generate_sentence = F, ...){
 
 read.word.ec <- function(word, ...){
   entry <- parse.remote(
-            url = sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=WordChallengeR&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_API, word),
-            file.loc = sprintf('etc/dictionary/ec/%s.json', word),
-            hint = sprintf('Getting EC "%s"', word),
-            type = 'JSON', ...
-          )
+    url = sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=WordChallengeR&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_API, word),
+    file.loc = sprintf('etc/dictionary/ec/%s.json', word),
+    hint = sprintf('Getting EC "%s"', word),
+    type = 'JSON', ...
+  )
   
   if (is.logical(entry) && entry == F) return(F)
   
   list(
     word = word,
     phonetic = entry$basic$`us-phonetic`,
-    explains = entry$basic$explains
+    explains = entry$basic$explains[!1:length(entry$basic$explains) %in% grep('人名',entry$basic$explains)]
   )
 }
 
@@ -147,10 +147,20 @@ read.word.ee <- function(word, generate_sentence = F, ...){
 # Dictionary List Functions
 #####################################################
 
-read.list <- function(file.name){
-  words <- read.csv(sprintf('usr/list/%s', file.name), header = T)
+read.list <- function(list.file, order = T){
+  words <- read.csv(sprintf('usr/list/%s', list.file), header = T)
   words <- lapply(words, remove_blank)
-  words
+  
+  if(!order) return(words)
+  
+  unique <- unique(flatten_list(words))
+  
+  list(
+    words = words,
+    unique = unique,
+    order = sort(unique),
+    shuffle = sample(unique)
+  )
 }
 
 flatten_list <- function(list){
@@ -195,7 +205,7 @@ as.dictionary <- function(entry, lib_mark = T, html = F, force = F){
   
   words_dictionary <- pasteLines(
     words_dictionary,
-    paste(entry$explains[!1:length(entry$explains) %in% grep('人名',entry$explains)], 
+    paste(entry$explains, 
           collapse = ifelse(html, '</br>', '\n'))
     , html = html
   )
@@ -233,7 +243,7 @@ build_word_cache <- function(){
   }
   
   for (.file in data_files)
-    all_words <- c(all_words, read.list(.file))
+    all_words <- c(all_words, read.list(.file, F))
   
   word_cache <- as.data.frame(table(flatten_list(all_words)))
   colnames(word_cache) <- c('word', 'freq')
@@ -454,7 +464,7 @@ generate_list_list <- function(profile, title_page = F){
 
 generate_application <- function(list.file, profile.file = 'default.csv', ...){
   profile <- read.profile(profile.file)
-  dict_list <- new_dictionary_list(list.file = list.file)
+  dict_list <- read.list(list.file = list.file)
   
   dict_content <- tryCatch(generate_content(dict_list, profile, ...),
                            error = function(e) list(error = T, msg = e))
