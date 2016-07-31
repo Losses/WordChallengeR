@@ -1,5 +1,7 @@
-if_command <- function(n, default){
-  ifelse(is.na(LAST_COMMAND[n]), default, LAST_COMMAND[n])
+if_command <- function(n, default, file_complete, extention = 'csv'){
+  if(is.na(LAST_COMMAND[n])) return(default)
+
+  ifelse(file_complete, auto_file_name(LAST_COMMAND[n], extention), LAST_COMMAND[n])
 }
 
 command_line <- function(){

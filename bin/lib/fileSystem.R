@@ -18,6 +18,12 @@ remove.files <- function(x){
     for (.i in x) file.remove(x)
 }
 
+auto_file_name <- function(x, extention = 'csv'){
+  pattern <- sprintf('.%s$', extention)
+  exists <- (grep(pattern, x) %>% length) > 0
+  ifelse(exists, x, sprintf('%s.%s', x, extention))
+}
+
 get.remote.try <- function(url){
   temp_location <- sprintf('%s/%s', tempdir(), rand_string())
   status <- tryCatch(download.file(url = url, destfile = temp_location, quiet = T),
