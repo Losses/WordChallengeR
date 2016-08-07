@@ -13,8 +13,19 @@ init <- function(){
     source(sprintf('bin/lib/%s',.lib_file), encoding = 'utf8')
   }
   
+  cls()
+  
+  new_status('Load config file')
+  source('usr/config.R', encoding = 'utf8')
+  status.done()
+  
+  new_status('Load standard word library')
   STANDARD_WORD_LIB <<- readLines('etc/standardLib.txt')
+  status.done()
+  
+  new_status('Build word cache')
   WORD_CACHE <<- build_word_cache()
+  status.done()
 }
 
 reset_env <- function(){
