@@ -1,4 +1,9 @@
-id,name,type,order,style,lang
-orderList,order list,list,order,simple,
-shuffleList,shuffle list,list,shuffle,,
-EE dictionary,dictionary,dictionary,original,,EE
+id,name,type,order,style,lang,format,size
+orderList,order list,list,order,simple,,html,
+shuffleList,shuffle list,list,shuffle,,,html,
+EE dictionary,dictionary,dictionary,original,,EE,html,
+test,test,test,shuffle,,EC,html,
+orderList,order list,list,order,simple,,pdf,A4
+shuffleList,shuffle list,list,shuffle,,,pdf,B4
+EE dictionary,dictionary,dictionary,original,,EE,pdf,B4
+test,test,test,shuffle,,EC,pdf,B4

@@ -1,7 +1,13 @@
-id,name,type,order,style,lang
-orderList,order list,list,order,simple,
-originalList,original list,list,original,unit,
-shuffleList,shuffle list,list,shuffle,simple,
-EC dictionary,EE dictionary,dictionary,original,,EC
-EE dictionary,EC dictionary,dictionary,original,,EE
-sentence,sentence list,sentence,original,,
+id,name,type,order,style,lang,format,size
+orderList,order list,list,order,simple,,html,
+originalList,original list,list,original,unit,,html,
+shuffleList,shuffle list,list,shuffle,simple,,html,
+EC dictionary,EE dictionary,dictionary,original,,EC,html,
+EE dictionary,EC dictionary,dictionary,original,,EE,html,
+sentence,sentence list,sentence,original,,,html,
+orderList,order list,list,order,simple,,pdf,A4
+originalList,original list,list,original,unit,,pdf,A4
+shuffleList,shuffle list,list,shuffle,simple,,pdf,A4
+EC dictionary,EE dictionary,dictionary,original,,EC,pdf,B4
+EE dictionary,EC dictionary,dictionary,original,,EE,pdf,B4
+sentence,sentence list,sentence,original,,,pdf,B4

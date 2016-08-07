@@ -507,15 +507,19 @@ generate_pdf_content <- function(dict_list, profile){
 generate_single_pdf <- function(dict_content_obj, dir.name){
   sprintf('Writing PDF file %s.pdf', dict_content_obj$size) %>% new_status
   
+  page_direction <- ifelse(dict_content_obj$size %in% c('B4', 'A3'), 'landscape', 'portrait')
+  page_size_style <- paste0(dict_content_obj$size, ' ', page_direction)
+  
   pdf_source <<- readLines('etc/template/PDF.html') %>% paste(collapse = '\n') %>%
     sub_utf('\\{\\{DICT_CONTENT\\}\\}', dict_content_obj$dict_content, .) %>%
-    sub_utf('\\{\\{PAGE_SIZE\\}\\}', dict_content_obj$size, .)
+    sub_utf('\\{\\{PAGE_SIZE\\}\\}', dict_content_obj$size, .) %>%
+    sub_utf('\\{\\{PAGE_SIZE_STYLE\\}\\}', page_size_style, .)
   
   temp_file <<- tempfile(fileext = '.html')
   writeLines(pdf_source, temp_file, useBytes = T)
   
   pdf_file_name <- sprintf('%s.pdf', dict_content_obj$size) %>% o_name(dir.name)
-  pdf_result <- sprintf('%s --page-size=%s --page-margin=0 %s -o %s',
+  pdf_result <- sprintf('%s --page-size=%s --page-margin=0 %s -o %s --input=html5',
                         PDF_GENERATOR_CALL, dict_content_obj$size,
                         temp_file, pdf_file_name) %>% system
 
