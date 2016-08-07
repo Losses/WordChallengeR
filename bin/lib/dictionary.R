@@ -206,7 +206,7 @@ as.dictionary <- function(entry, lib_mark = T, html = F, force = F){
   words_dictionary <- pasteLines(
     words_dictionary,
     paste(entry$explains, 
-          collapse = ifelse(html, '</br>', '\n'))
+          collapse = ifelse(html, '<br>', '\n'))
     , html = html
   )
   if (html) words_dictionary <- sprintf('<div class="word">%s</div>', words_dictionary)
@@ -428,7 +428,7 @@ generate_list <- function(x, order, style, html = T){
     return(generate_simple_list(x, order, html))
 }
 
-content_warpper <- function(x, profile, ...){
+dictionary_content_warpper <- function(x, profile, ...){
   profile <- as.list(profile)
   sprintf('Generate %s: %s', profile$type, profile$name) %>% new_status
   if (profile$type == 'list')
@@ -443,12 +443,12 @@ content_warpper <- function(x, profile, ...){
   
   status.done()
   
-  sprintf('<div data-list-id="%s" class="%s">%s</div>',
+  sprintf('<div data-list-id="%s" class="%s page">%s</div>',
           profile$id, profile$type, content)
 }
 
-generate_content <- function(x, profile, ...){
-  apply(profile, 1, content_warpper, x = x, ...) %>% paste(collapse = '')
+generate_dictionary_content <- function(x, profile, ...){
+  apply(profile, 1, dictionary_content_warpper, x = x, ...) %>% paste(collapse = '')
 }
 
 generate_list_list_element <- function(profile, title_page = F){
@@ -465,11 +465,8 @@ generate_list_list <- function(profile, title_page = F){
     paste(collapse = '')
 }
 
-generate_application <- function(list.file, profile.file = 'default.csv', ...){
-  profile <- read.profile(profile.file)
-  dict_list <- read.list(list.file = list.file)
-  
-  dict_content <- tryCatch(generate_content(dict_list, profile, ...),
+generate_application <- function(dict_list, profile, ...){
+  dict_content <- tryCatch(generate_dictionary_content(dict_list, profile, ...),
                            error = function(e) list(error = T, msg = e))
   if (is.list(dict_content) && is.logical(dict_content$error) && dict_content$error) {
     dict_content$msg %>% sprintf('%s\n', .) %>% red %>% cat
@@ -485,18 +482,87 @@ generate_application <- function(list.file, profile.file = 'default.csv', ...){
     sub_utf('\\{\\{TITLE_LIST_CONTENT\\}\\}', title_list_content, .)
 }
 
+write.application <- function(dict_list, profile,
+                              dir.name = as.numeric(Sys.time()),
+                              auto.browse = T, ...){
+  if(is.null(profile) || nrow(profile) == 0) return(F)
+  
+  generate_application(dict_list, profile, ...) %>%
+    writeLines(o_name('application.html', dir.name), useBytes = T)
+  
+  if(auto.browse) sprintf('file:///%s/usr/output/%s/application.html', getwd(), dir.name) %>% browseURL
+}
+
+#####################################################
+# PDF Generating Function
+#####################################################
+
+generate_pdf_content <- function(dict_list, profile){
+  list(
+    size = as.character(profile[1, 'size']),
+    dict_content = generate_dictionary_content(dict_list, profile)
+  )
+}
+
+generate_single_pdf <- function(dict_content_obj, dir.name){
+  sprintf('Writing PDF file %s.pdf', dict_content_obj$size) %>% new_status
+  
+  pdf_source <<- readLines('etc/template/PDF.html') %>% paste(collapse = '\n') %>%
+    sub_utf('\\{\\{DICT_CONTENT\\}\\}', dict_content_obj$dict_content, .) %>%
+    sub_utf('\\{\\{PAGE_SIZE\\}\\}', dict_content_obj$size, .)
+  
+  temp_file <<- tempfile(fileext = '.html')
+  writeLines(pdf_source, temp_file, useBytes = T)
+  
+  pdf_file_name <- sprintf('%s.pdf', dict_content_obj$size) %>% o_name(dir.name)
+  pdf_result <- sprintf('%s --page-size=%s --page-margin=0 %s -o %s',
+                        PDF_GENERATOR_CALL, dict_content_obj$size,
+                        temp_file, pdf_file_name) %>% system
+
+  if(pdf_result == 0) status.done() else status.fail()
+}
+
+write.pdf <- function(dict_list, profile,
+                      dir.name = as.numeric(Sys.time())){
+  
+  page_sizes <- profile[['size']] %>% levels %>% as.character %>% .[. != '']
+  
+  if((page_sizes %>% .[! . %in% c('A4', 'A3', 'B5', 'B4', 'letter')] %>% length) != 0)
+    stop('Page size must be A4, A3, B5, B4, letter.')
+  
+  profile_by_size <- list()
+  
+  for(.size in page_sizes)
+    profile_by_size[[.size]] <- profile[profile[, 'size'] == .size, ]
+  
+  lapply(profile_by_size, generate_pdf_content, dict_list = dict_list) %>%
+    lapply(generate_single_pdf, dir.name = dir.name)
+}
+
+#####################################################
+# Dictionary Generating Function
+#####################################################
+
 o_name <- function(x, dir.name = as.numeric(Sys.time())){
   dir_name <- sprintf('usr/output/%s', dir.name)
   if (!dir.exists(dir_name)) dir.create(dir_name)
   sprintf('usr/output/%s/%s', dir.name, x)
 }
 
-write.application <- function(list.file, 
-                              profile.file = 'default.csv',
-                              dir.name = as.numeric(Sys.time()),
-                              auto.browse = T, ...){
-  generate_application(list.file, profile.file, ...) %>%
-    writeLines(o_name('application.html', dir.name), useBytes = T)
+new_dictionary <- function(list.file, 
+                           profile.file = 'default.csv',
+                           dir.name = as.numeric(Sys.time()), ...){
   
-  if(auto.browse) sprintf('file:///%s/usr/output/%s/application.html', getwd(), dir.name) %>% browseURL
+  dict_list <- read.list(list.file = list.file)
+  profile <- read.profile(profile.file)
+  
+  profile_list <- list(
+    html = profile[profile[['format']] == 'html', ],
+    pdf = profile[profile[['format']] == 'pdf', ]
+  )
+  
+  write.application(dict_list, profile_list$html, dir.name)
+  write.pdf(dict_list, profile_list$pdf, dir.name)
+  T
 }
+
