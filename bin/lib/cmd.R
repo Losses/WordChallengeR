@@ -11,7 +11,8 @@ command_line <- function(){
     summary = 'bin/summary.R',
     get = 'bin/get.R',
     new = 'bin/new.R',
-    clear = 'bin/clear.R'
+    clear = 'bin/clear.R',
+    explorer = 'bin/explorer.R'
   )
   
   command <- readline('$WC > ' %>% bold %>% green)

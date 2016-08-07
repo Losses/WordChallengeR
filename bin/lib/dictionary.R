@@ -484,7 +484,7 @@ generate_application <- function(dict_list, profile, ...){
 
 write.application <- function(dict_list, profile,
                               dir.name = as.numeric(Sys.time()),
-                              auto.browse = T, ...){
+                              auto.browse = F, ...){
   if(is.null(profile) || nrow(profile) == 0) return(F)
   
   generate_application(dict_list, profile, ...) %>%
@@ -567,6 +567,6 @@ new_dictionary <- function(list.file,
   
   write.application(dict_list, profile_list$html, dir.name)
   write.pdf(dict_list, profile_list$pdf, dir.name)
-  T
+  paste0('usr/output/', dir.name) %>% explorer
 }
 
