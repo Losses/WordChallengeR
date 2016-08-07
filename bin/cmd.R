@@ -13,7 +13,7 @@ init <- function(){
     source(sprintf('bin/lib/%s',.lib_file), encoding = 'utf8')
   }
   
-  standard_lib <<- readLines('etc/standardLib.txt')
+  STANDARD_WORD_LIB <<- readLines('etc/standardLib.txt')
   WORD_CACHE <<- build_word_cache()
 }
 

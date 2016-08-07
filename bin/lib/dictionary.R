@@ -247,7 +247,7 @@ build_word_cache <- function(){
   
   word_cache <- as.data.frame(table(flatten_list(all_words)))
   colnames(word_cache) <- c('word', 'freq')
-  word_cache$in_lib <- sapply(word_cache$word, is.pharse) | word_cache$word %in% standard_lib
+  word_cache$in_lib <- sapply(word_cache$word, is.pharse) | word_cache$word %in% STANDARD_WORD_LIB
   word_cache$word <- as.character(word_cache$word)
   
   word_cache
