@@ -19,6 +19,8 @@ require_suggest <- function(misspell, suggestion, choose_suggestion = readline()
     require_suggest(misspell, suggestion)
   } else if (choose_suggestion == 0) {
     return(misspell)
+  } else if (choose_suggestion == '!'){
+    return('')
   } else if (choose_suggestion > length(suggestion)) {
       cat('The # you input is too large.\n')
       require_suggest(misspell, suggestion)
