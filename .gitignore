@@ -36,6 +36,7 @@ vignettes/*.pdf
 tmp/*
 usr/output/*
 usr/list/*.csv
+usr/config.R
 etc/dictionary/ec/*.json
 etc/dictionary/ee/*.xml
 etc/playground.R

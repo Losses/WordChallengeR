@@ -3,8 +3,6 @@
 #  By Losses Don @ 2016-07-07
 #--------------------------------------------------------
 
-EC_API <- '1512553241'
-EE_API <- '84ca89b8-2ca9-4851-9ede-d93d7b866f39'
 DICTIONARY_NEED_DELETE <- character(0)
 
 read.profile <- function(profile.file){
