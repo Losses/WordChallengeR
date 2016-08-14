@@ -20,15 +20,15 @@ wcR can:
 
  Installation and config
 -------------------------
-1. Download the wcR from [github](https://github.com/Losses/WordChallengeR.git)
-2. Install [Prince](http://www.princexml.com/download/) and 
+* Download the wcR from [github](https://github.com/Losses/WordChallengeR.git).
+* Install [Prince](http://www.princexml.com/download/) and 
    [R](https://www.r-project.org/) on your system.
-3. Apply for API from [Youdao](http://fanyi.youdao.com/openapi?path=data-mode)
+* Apply for API from [Youdao](http://fanyi.youdao.com/openapi?path=data-mode)
    and [Merriam-Webster](http://www.dictionaryapi.com/)
    **Notice: On Merriam-webster Developer Center, there are many type of APIs,
    but wcR ONLY support 'Merriam-Webster's Learner's Dictionary with Audio', 
    so you should require for this API.**
-4. Rename `usr/sample.config.R` to `usr/config.R`, and edit it: Fill the Youdao's
+* Rename `usr/sample.config.R` to `usr/config.R`, and edit it: Fill the Youdao's
    API in the first line like: 
 
         EC_API <- '0000000000'
@@ -37,10 +37,41 @@ wcR can:
 
         EE_API <- '00000000-0000-0000-0000-000000000000'
 
-5. Let wcR know how to call the Prince, like:
+* Let wcR know how to call the Prince, like:
 
         PDF_GENERATOR_CALL <- '../bin/prince/bin/prince'
 
-6. Now, start .Rprofile(it's a file in the wcR's folder) with R, like:
+* Now, start .Rprofile(it's a file in the wcR's folder) with R, like:
 
         R .Rprofile
+
+ Get started
+-------------
+Now you can see `$wc>`on your screen, everything start here.
+
+### Create a new vocabulary list
+* Type `new [list name]` to create a new list, like:
+
+        new myList
+
+* `$new/? (0,0) >` was printed on the screen. `/?` is the name of current unit,
+  we haven't set any unit now, so it leaves a question mark. `(0,0)` is the 
+  position of the word, the first number means the # of unit, the second number
+  means the # of the following word you'd input.
+* We need a name for the first unit, so input `>[unit name]`, like:
+
+        >UnitOne
+
+  Make sure the unit name ONLY have alphabets, without number, space, Chinese
+  characters or others. `>[unit name]` is the command for switching between 
+  units or create a new unit.
+ * Type a word normally to add a new word.
+ * Type `:v` to see all words in the current list.
+ * `:q` to save the list, and quit the new tool.
+ * `:fq` to quit the new tool without saving the list.
+ * The new tool will save the current workspace automatically, so if the program
+   crashed or you leaved the new tool by using the command `:fq`, you can simply
+   enter the new tool by the command `new`, and type `1` to recover the workspace.
+   
+### Generating a vocabulary list
+ * The command `dictionary [list name]` is for creating a new vocabulary list.
