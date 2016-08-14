@@ -7,6 +7,6 @@
 #   new (listFileName)
 #
 
-new_list(
-  file.name = if_command(2, readline('List name: '))
+start_list_editor(
+  file.name = if_command(2, NULL)
 )

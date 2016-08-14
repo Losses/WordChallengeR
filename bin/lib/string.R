@@ -77,3 +77,7 @@ strsplit_by_len <- function(x, len = 46){
   
   result
 }
+
+str_to_numeric <- function(x){
+  tryCatch(as.numeric(x), warning = function(e) F)
+}
