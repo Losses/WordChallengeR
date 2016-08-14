@@ -8,7 +8,7 @@ Hate to recite the f**king vocabulary again, again, again, and again?
 But nobody can install the dictionary.apk to your brain, so you still have to 
 recite it again, again and again, just like a masochist :D.
 
-This tool can't give you a better brain, but it can save your time onorganizing
+This tool can't give you a better brain, but it can save your time on organizing
 the vocabulary list.
 
 wcR can:
@@ -21,7 +21,8 @@ wcR can:
  Installation and config
 -------------------------
 1. Download the wcR from [github](https://github.com/Losses/WordChallengeR.git)
-2. Install [Prince]() and R on your system.
+2. Install [Prince](http://www.princexml.com/download/) and 
+   [R](https://www.r-project.org/) on your system.
 3. Apply for API from [Youdao](http://fanyi.youdao.com/openapi?path=data-mode)
    and [Merriam-Webster](http://www.dictionaryapi.com/)
    **Notice: On Merriam-webster Developer Center, there are many type of APIs,
