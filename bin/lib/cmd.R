@@ -40,7 +40,7 @@ wcR <- function(){
   cat('\n  Word Challange System  \n=========================\n\nAuthor: Losses Don\nVersion: 1.1\n')
   cat(sprintf('R Version: %s.%s\n', version$major, version$minor))
   cat('EC Dictionary API: Youdao Dict\nEE Dictionary API: Merriam-Webster\n\n')
-  cat('This program is free software: you can redistribute it and/or modify it under the terms of the LGPLv3.\n\n')
+  cat('This program is free software: you can redistribute it and/or modify it under the terms of the GPLv3.\n\n')
   
   command_line()
 }
