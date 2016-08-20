@@ -1,0 +1,9 @@
+id,name,type,order,style,lang,format,size
+orderList,order list,list,order,simple,,html,
+EE dictionary,EC dictionary,dictionary,original,,EE,html,
+sentence,sentence list,sentence,original,,,html,
+test,test,test,shuffle,,EC,html,
+orderList,order list,list,order,simple,,pdf,A4
+EC dictionary,EE dictionary,dictionary,original,,EC,pdf,B4
+EE dictionary,EC dictionary,dictionary,original,,EE,pdf,B4
+sentence,sentence list,sentence,original,,,pdf,B4
