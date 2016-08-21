@@ -567,4 +567,3 @@ new_dictionary <- function(list.file,
   write.pdf(dict_list, profile_list$pdf, dir.name)
   paste0('usr/output/', dir.name) %>% explorer
 }
-
