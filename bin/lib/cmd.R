@@ -37,10 +37,29 @@ command_line <- function(){
 
 wcR <- function(){
   cls()
-  cat('\n  Word Challange System  \n=========================\n\nAuthor: Losses Don\nVersion: 1.1\n')
-  cat(sprintf('R Version: %s.%s\n', version$major, version$minor))
-  cat('EC Dictionary API: Youdao Dict\nEE Dictionary API: Merriam-Webster\n\n')
-  cat('This program is free software: you can redistribute it and/or modify it under the terms of the GPLv3.\n\n')
+  
+  template <- readLines('etc/template/welcome.txt')
+  rversion <- paste0(version$major, '.', version$minor)
+  
+  cat('\n')
+  for(.i in 1:7){
+    .this_line <- strsplit(template[.i], '@|@')[[1]]
+    cat(cyan(.this_line[1]))
+    
+    if(.i == 4)
+      sprintf(.this_line[3], WCR_VERSION) %>% cat
+    else if (.i == 5)
+      sprintf(.this_line[3], rversion) %>% cat
+    else
+      cat(.this_line[3])
+    
+    cat('\n')
+  }
+  
+  for(.i in 8:length(template)){
+    cat(template[.i])
+    cat('\n')
+  }
   
   command_line()
 }

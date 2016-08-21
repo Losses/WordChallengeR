@@ -1,0 +1,11 @@
+               _____    @|@         Word Challange System  
+              |  __ \   @|@  ===================================
+ __      _____| |__) |  @|@   Author: Losses Don
+ \ \ /\ / / __|  _  /   @|@   Version: %s
+  \ V  V / (__| | \ \   @|@   R Version: %s
+   \_/\_/ \___|_|  \_\  @|@   EC Dictionary API: Youdao Dict
+                        @|@   EE Dictionary API: Merriam-Webster
+
+This program is free software: you can redistribute it and/or 
+modify it under the terms of the GPLv3.
+
