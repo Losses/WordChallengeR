@@ -81,3 +81,9 @@ strsplit_by_len <- function(x, len = 46){
 str_to_numeric <- function(x){
   tryCatch(as.numeric(x), warning = function(e) F)
 }
+
+remove_side_blank <- function(x){
+  strsplit(x, ' ') %>% lapply(function(x){
+    x[x!=''] %>% paste(collapse = ' ')
+  }) %>% as.character
+}

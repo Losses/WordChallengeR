@@ -64,13 +64,10 @@ is.edit_command <- function(x){
 }
 
 read.edit_command <- function(x, result){
-  command <- strsplit(x, ' ') %>% .[[1]] %>% .[-1] %>% 
-    strsplit(',') %>% .[[1]]
+  command <- strsplit(x, ':e ')[[1]][-1] %>% 
+    strsplit(',') %>% .[[1]] %>% remove_side_blank
 
   position <- list(col = NULL, row = NULL)
-  
-  for(.i in 1:3)
-    command[.i] <- strsplit(command[.i], ' ')[[1]] %>% .[. != ''] %>% .[1]
   
   for(.i in 1:2){
     num_str <- str_to_numeric(command[.i])
