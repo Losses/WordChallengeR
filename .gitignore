@@ -45,3 +45,7 @@ etc/playground.R
 !usr/output/.keep
 
 .Rproj.user
+
+#tmp files
+~$*.*
+*.tmp
