@@ -56,6 +56,10 @@ strlength <- function(x){
   length(str[[1]])
 }
 
+repstr <- function(x, n){
+  rep(x, n) %>% paste(collapse = '')
+}
+
 strsplit_by_len <- function(x, len = 46){
   check1Char(x)
   xlen <- strlength(x)

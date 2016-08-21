@@ -7,5 +7,5 @@
 #   get [word]
 #
 
-paste(LAST_COMMAND[-1], collapse = ' ') %>% read.word %>% as.dictionary %>% cat
-cat('\n')
+paste(LAST_COMMAND[-1], collapse = ' ') %>% print_dictionary
+cat('\n\n')
