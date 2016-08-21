@@ -65,7 +65,7 @@
         .menu_submenu{bottom:40px; right:10px; border:1px solid #ccc; min-width:180px; position:fixed; transition:all 300ms; max-height:0; overflow:hidden; visibility: hidden;}
         .menu_submenu>li{padding:10px; background:#444; transition: all 300ms;}
         .menu_submenu>li:hover{background: #555; transition:all 300ms;}
-        .list_menu:hover .menu_submenu{max-height:1000px; visibility: visible;}
+        .list_menu:hover .menu_submenu, .list_menu.touched .menu_submenu{max-height:1000px; visibility: visible;}
         
         #main .dictionary, #main .sentence, #main .test{-webkit-column-count:4; -moz-column-count:4; column-count:4; -webkit-column-gap:40px; -moz-column-gap:40px; column-gap:40px; -webkit-column-rule-style:solid; -moz-column-rule-style:solid; column-rule-style:solid; -webkit-column-rule-width:1px; -moz-column-rule-width:1px; column-rule-width:1px}
         #main .word{margin:.6em 0; orphans: 4;}
@@ -115,32 +115,47 @@
     </style>
     <script>
         {
-            let listElements;
+            let listElements = document.querySelectorAll('[data-list-id]');
+			let menuFolderEl = document.querySelector('.menu_folder');
+			
             const switchPage = function(event){
-                                let target, i;
+				let target, i;
+
+                target = event.target.dataset.toList;
+                if(!target) return false;
                                 
-                                target = event.target.dataset.toList;
-                                if(!target) return false;
-                                
-                                for(i = 0; i < listElements.length; i++){
-                                    if(listElements[i].dataset.listId === target)
-                                        listElements[i].classList.add('show')
-                                    else
-                                        listElements[i].classList.remove('show')
-                                }
-                                return true;
-                            }
-            
-            listElements = document.querySelectorAll('[data-list-id]');
+                for(i = 0; i < listElements.length; i++){
+					if(listElements[i].dataset.listId === target)
+						listElements[i].classList.add('show')
+					else
+						listElements[i].classList.remove('show')
+                }
+                return true;
+            }
+
+			const onMenuFolderTouched = function(){
+				menuFolderEl.classList.add('touched');
+				
+				setTimeout(function(){
+					nextEvent = document.addEventListener('touchend', onDocumentTouchedAfterTouchedMenuFolder, false);
+				}, 300);
+			}
+			
+			const onDocumentTouchedAfterTouchedMenuFolder = function(){
+				menuFolderEl.classList.remove('touched');
+				document.removeEventListener('touchend', onDocumentTouchedAfterTouchedMenuFolder, false);
+			}
+
             document.querySelector('.menu_folder')
                     .addEventListener('click', switchPage);
             
             document.querySelector('.title_menu')
                     .addEventListener('click', event => {
-                        console.log(switchPage(event));
                         if(switchPage(event))
                             document.querySelector('body').classList.add('start')
-                    })
+                    });
+
+			menuFolderEl.addEventListener('touchend', onMenuFolderTouched, false);
         }
     </script>
     
