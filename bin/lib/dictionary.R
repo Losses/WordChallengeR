@@ -22,7 +22,7 @@ read.word <- function(word, lang = 'EC', generate_sentence = F, ...){
 
 read.word.ec <- function(word, ...){
   entry <- parse.remote(
-    url = sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=WordChallengeR&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_API, word),
+    url = sprintf('http://fanyi.youdao.com/openapi.do?keyfrom=%s&key=%s&type=data&doctype=json&only=dict&version=1.1&q=%s', EC_KEY_FROM, EC_API, word),
     file.loc = sprintf('etc/dictionary/ec/%s.json', word),
     hint = sprintf('Getting EC "%s"', word),
     type = 'JSON', ...
