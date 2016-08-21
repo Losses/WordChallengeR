@@ -29,11 +29,12 @@ wcR can:
    but wcR ONLY support 'Merriam-Webster's Learner's Dictionary with Audio', 
    so you should require for this API.**
 * Rename `usr/sample.config.R` to `usr/config.R`, and edit it: Fill the Youdao's
-   API in the first line like: 
+  API key and ‘key from’ like:
 
         EC_API <- '0000000000'
+        EC_KEY_FROM <- 'Linda_wcR'
 
-   and Fill the Merriam-Webster's API in the second like:
+   and Fill the Merriam-Webster's API key like:
 
         EE_API <- '00000000-0000-0000-0000-000000000000'
 
