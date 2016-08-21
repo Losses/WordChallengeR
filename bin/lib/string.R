@@ -5,7 +5,7 @@
 
 pasteLines <- function(x, y = '', html = F){
   if (x == '') return(y)
-  if (html) paste(x, y, sep = '</br>')
+  if (html) paste(x, y, sep = '<br/>')
   else paste(x, y, sep = '\n')
 }
 

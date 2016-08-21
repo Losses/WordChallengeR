@@ -174,7 +174,7 @@ as.dictionary <- function(entry, lib_mark = T, html = F, force = F){
   if (is.logical(entry) && entry == F) {
     if (!force) stop('Var entry is invalid!')
     else {
-      if (html) return('<p style="color:red">\\(X_X)/<br></p>')
+      if (html) return('<p style="color:red">\\(X_X)/<br/></p>')
       else return('\\(X_X)/')
     }
   }
@@ -204,7 +204,7 @@ as.dictionary <- function(entry, lib_mark = T, html = F, force = F){
   words_dictionary <- pasteLines(
     words_dictionary,
     paste(entry$explains, 
-          collapse = ifelse(html, '<br>', '\n'))
+          collapse = ifelse(html, '<br/>', '\n'))
     , html = html
   )
   if (html) words_dictionary <- sprintf('<div class="word">%s</div>', words_dictionary)
