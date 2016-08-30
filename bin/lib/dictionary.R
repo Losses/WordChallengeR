@@ -220,7 +220,7 @@ word_in_cache <- function(word){
 }
 
 need_bold <- function(word){
-  word_in_cache(word) && WORD_CACHE[WORD_CACHE$word == word,'freq'] > 1
+  word_in_cache(word) && WORD_CACHE[WORD_CACHE$word == word,'freq'] >= 1
 }
 
 need_italic <- function(word){
